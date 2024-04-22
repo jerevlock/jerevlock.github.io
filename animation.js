@@ -20,73 +20,83 @@ let colors = [
 
 let FPS = 60;
 
-let width, height,
-    velocityX = 1, velocityY = 1,
-    pause = true,
-    previousColor = 0;
-
-const reset = () => {
-  width = window.innerWidth;
-  height = window.innerHeight;
-
-  // Reset the position of the label to the center of the window
-  label.style.left = `${(width - label.clientWidth) / 2}px`;
-  label.style.top = `${(height - label.clientHeight) / 2}px`;
-
-  // Reset the initial color
-  label.style.stroke = colors[0];
-  label.style.fill = colors[0];
-
-  // Unpause the animation if there is enough space
-  pause = width <= label.clientWidth || height <= label.clientHeight;
-};
-
-const getRandomColor = () => {
-  let currentColor;
-  do {
-    currentColor = Math.floor(Math.random() * colors.length);
-  } while (previousColor === currentColor);
-  previousColor = currentColor;
-  return colors[currentColor];
-};
-
+let width,
+  height,
+  velocityX = 1,
+  velocityY = 1,
+  pause = true,
+  previousColor = 0;
 setInterval(() => {
   if (pause) return;
 
-  // Update the current position based on velocity
-  let currentLeft = parseInt(label.style.left, 10);
-  let currentTop = parseInt(label.style.top, 10);
+  let rect = label.getBoundingClientRect();
+  let offset = 75;
 
-  // Adjust position
-  let newLeft = currentLeft + velocityX;
-  let newTop = currentTop + velocityY;
+  let left = rect.x;
+  let top = rect.y;
 
-  // Horizontal boundary checks
-  if (newLeft + label.clientWidth > width || newLeft < 0) {
+  if (left + rect.width - offset >= width || left <= -offset) {
     velocityX = -velocityX;
-    newLeft = newLeft + 2 * velocityX; // Adjust position to prevent sticking to the boundary
     let randomColor = getRandomColor();
     label.style.stroke = randomColor;
     label.style.fill = randomColor;
-    body.style.boxShadow = newLeft < width / 2 ?
-      `inset 4px 0 0 0 ${randomColor}` : `inset -4px 0 0 0 ${randomColor}`;
-  }
 
-  // Vertical boundary checks
-  if (newTop + label.clientHeight > height || newTop < 0) {
+    if (left + 150 <= width / 2) {
+      body.style.boxShadow = `inset 4px 0px 0px 0px ${randomColor}`;
+    } else {
+      body.style.boxShadow = `inset -4px 0px 0px 0px ${randomColor}`;
+    }
+  }
+  if (top + rect.height >= height || top <= 0) {
     velocityY = -velocityY;
-    newTop = newTop + 2 * velocityY; // Adjust position to prevent sticking to the boundary
     let randomColor = getRandomColor();
     label.style.stroke = randomColor;
     label.style.fill = randomColor;
-    body.style.boxShadow = newTop < height / 2 ?
-      `inset 0 4px 0 0 ${randomColor}` : `inset 0 -4px 0 0 ${randomColor}`;
+
+    if (top + 28 <= height / 2) {
+      body.style.boxShadow = `inset 0px 4px 0px 0px ${randomColor}`;
+    } else {
+      body.style.boxShadow = `inset 0px -4px 0px 0px ${randomColor}`;
+    }
   }
 
-  // Apply updated positions
-  label.style.left = `${newLeft}px`;
-  label.style.top = `${newTop}px`;
+  label.style.left = rect.x + velocityX + "px";
+  label.style.top = rect.y + velocityY + "px";
 }, 1000 / FPS);
 
-window.addEventListener("resize", reset);
+const reset = () => {
+  width = 
+    window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth;
+
+  height =
+    window.innerHeight ||
+    document.documentElement.clientHeight ||
+    document.body.clientHeight;
+
+  pause =
+    width <= label.getBoundingClientRect().width ||
+    height <= label.getBoundingClientRect().height;
+
+  label.style.left = "calc(50vw - 150px)";
+  label.style.top = "calc(50vh - 28px)";
+  label.style.stroke = colors[0];
+  label.style.fill = colors[0];
+};
+
+const getRandomColor = () => {
+  let currentColor = -1;
+
+  do {
+    currentColor = Math.floor(Math.random() * colors.length);
+  } while (previousColor == currentColor);
+
+  previousColor = currentColor;
+
+  return colors[currentColor];
+};
+
 reset();
+
+window.addEventListener("resize", reset, true);
