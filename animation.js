@@ -18,7 +18,7 @@ let colors = [
   "#fa744f",
 ];
 
-let FPS = 60;
+let FPS = 120;
 
 let width, height,
     velocityX = 1, velocityY = 1,
