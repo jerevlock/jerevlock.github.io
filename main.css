@@ -11,6 +11,7 @@ body {
     left: calc(50vw - 150px);
     top: calc(50vh - 28px);
     padding-right: 0rem;
+    width: 300px;
     height: 56px;
   }
   
