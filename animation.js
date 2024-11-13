@@ -69,7 +69,7 @@ setInterval(() => {
     label.style.stroke = randomColor;
     label.style.fill = randomColor;
     body.style.boxShadow = newLeft < width / 2 ?
-      `inset 4px 0 0 0 ${randomColor}` : `inset -4px 0 0 0 ${randomColor}`;
+      `inset 4px 0 0 0 ${randomColor} transparent` : `inset -4px 0 0 0 ${randomColor} transparent`;
   }
 
   // Vertical boundary checks
@@ -80,7 +80,7 @@ setInterval(() => {
     label.style.stroke = randomColor;
     label.style.fill = randomColor;
     body.style.boxShadow = newTop < height / 2 ?
-      `inset 0 4px 0 0 ${randomColor}` : `inset 0 -4px 0 0 ${randomColor}`;
+      `inset 0 4px 0 0 ${randomColor} transparent` : `inset 0 -4px 0 0 ${randomColor} transparent`;
   }
 
   // Apply updated positions
